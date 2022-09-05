@@ -1,0 +1,6 @@
+CREATE TABLE airport
+(
+    id          INTEGER      NOT NULL AUTO_INCREMENT,
+    AIRPORT_CODE VARCHAR(128) NOT NULL,
+    PRIMARY KEY (id)
+);
