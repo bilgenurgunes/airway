@@ -8,6 +8,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/flights")
 public class FlightsController {
@@ -24,6 +26,11 @@ public class FlightsController {
     @GetMapping("/{id}")
     public Flight getFlight(@PathVariable Long id) {
         return flightsService.findFlightById(id);
+    }
+
+    @GetMapping()
+    public List<Flight> getFlight() {
+        return flightsService.getAllFlights();
     }
 
     @PostMapping

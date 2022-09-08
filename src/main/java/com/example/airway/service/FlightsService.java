@@ -5,6 +5,7 @@ import com.example.airway.entity.Flight;
 import com.example.airway.repository.FlightsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
@@ -35,12 +36,7 @@ public class FlightsService {
     }
 
     public Flight addFlight(FlightDTO flightDTO) {
-        List<Flight> flightsBetweenCities =
-                flightsRepository.findByDepartureAirportAndArrivalAirport(
-                        flightDTO.getDeparture(), flightDTO.getArrival());
-        if(flightsBetweenCities.size() >= maximumFlightsBetweenCities) {
-            throw new HttpClientErrorException(HttpStatus.NOT_ACCEPTABLE, "We can not add more than " + maximumFlightsBetweenCities + " flights");
-        }
+        validateMaximumFlightNumbers(flightDTO);
 
         Flight toBeAddedFlight = new Flight();
         toBeAddedFlight.setArrivalAirport(flightDTO.getArrival());
@@ -48,5 +44,20 @@ public class FlightsService {
         toBeAddedFlight.setPlaneId(flightDTO.getPlaneId());
         return flightsRepository.save(toBeAddedFlight);
     }
+
+    private void validateMaximumFlightNumbers(FlightDTO flightDTO) {
+        List<Flight> flightsBetweenCities =
+                flightsRepository.findByDepartureAirportAndArrivalAirport(
+                        flightDTO.getDeparture(), flightDTO.getArrival());
+        if(flightsBetweenCities.size() >= maximumFlightsBetweenCities) {
+            throw new HttpClientErrorException(HttpStatus.NOT_ACCEPTABLE, "We can not add more than " + maximumFlightsBetweenCities + " flights");
+        }
+    }
+
+    public List<Flight> getAllFlights (){
+        return flightsRepository.findAll();
+
+    }
+
 
 }
